@@ -3,6 +3,7 @@ Get a simple Wasserstein GAN up and running;
 expand from there...
 
 1. https://arxiv.org/abs/1701.07875
+1. https://arxiv.org/pdf/1704.00028.pdf
 
 ## One-time Setup
 1. conda env create -f .\environment.yml
