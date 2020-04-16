@@ -26,8 +26,8 @@ if not do_masking:
 else:
     sigma = 0.5
     num_steps = 500
-    num_steps_G = 3
-    num_steps_D = 3
+    num_steps_G = 1
+    num_steps_D = 1
 
     batch_size = 3
     learning_rate_G = 1.0e-3
@@ -138,14 +138,14 @@ for step in range(num_steps):
                loss_D.item(),
                reg_D.item()
                ))
-
+        
         if step % output_step != 0:
             continue
         
         im_hat = G.x.detach().cpu().squeeze().numpy()
         vmin, vmax = im.min(), im.max()
         
-        fig, ax = plt.subplots(1, 3)
+        fig, ax = plt.subplots(1, 3, figsize=(8,2))
         im_h = ax[0].imshow(im, vmin=vmin, vmax=vmax)
         ax[0].set_title('ground truth')
         fig.colorbar(im_h, ax=ax[0])
@@ -158,6 +158,7 @@ for step in range(num_steps):
         ax[2].set_title('absolute error')
         fig.colorbar(im_h, ax=ax[2])
 
+        fig.tight_layout()
         fig.savefig(os.path.join(outdir,f'im_{step}.png'))    
         plt.close(fig)
 
