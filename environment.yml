@@ -1,0 +1,7 @@
+name: simple-WGAN
+dependencies:
+  - python=3.7.4
+  - pytorch::pytorch=1.4.0
+  - pytorch::torchvision=0.5.0
+  - cudatoolkit
+  - scipy=1.4.1
