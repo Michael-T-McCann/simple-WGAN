@@ -40,5 +40,15 @@ class Mask(torch.nn.Module):
     def forward(self, x):
         mask = torch.rand_like(x) > self.fraction
         return x * mask
+
+class RandomCrop(torch.nn.Module):
+    def __init__(self, crop_shape):
+        super().__init__()
+        self.crop_shape = crop_shape
+
+    def forward(self, x):
+        m = np.random.randint(0, x.shape[0]-self.crop_shape[0])
+        n = np.random.randint(0, x.shape[1]-self.crop_shape[1])
+        return x[m:m+self.crop_shape[0], n:n+self.crop_shape[1]]        
         
     

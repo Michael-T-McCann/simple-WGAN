@@ -9,18 +9,16 @@ def train_WGAN(D, G, dataset_true,
                learning_rate_G=1.0, learning_rate_D=1.0,
                num_steps_G=1, num_steps_D=1,
                reg_weight=1.0,
-               device=torch.device('cpu'), out_folder=''):
+               device=torch.device('cpu'), out_folder='',
+               output_step=1):
 
-    # todo: this shouldn't go here...
-    # setup output folder
-    # setup plots
+    # todo: this shouldn't go here, nor should all the plotting at the end
+    # could I refactor with a yield?
     plt.set_cmap('gray')
 
 
     # -----
 
-
-    output_step = 1
 
     D = D.to(device)
     G = G.to(device)
@@ -39,8 +37,8 @@ def train_WGAN(D, G, dataset_true,
     optim_D = torch.optim.Adam(D.parameters(), lr=learning_rate_D)
 
     # main loop
-    print('%10s\t%10s\t%10s\t%10s\t%10s'
-          % ('step', 'x-x_GT', 'loss_G', 'loss_D', 'loss_D_reg'))
+    print('%10s\t%10s\t%10s\t%10s\t%10s\t%10s'
+          % ('step', 'x-x_GT', 'loss_G', 'D(true)', 'D(fake)', 'loss_D_reg'))
     for step in range(num_steps):
         # update D
         for inner_step in range(num_steps_D):
@@ -96,24 +94,25 @@ def train_WGAN(D, G, dataset_true,
 
         # print loss, make plots
         with torch.no_grad():
-            print("%10d\t%10.3e\t%10.3e\t%10.3e\t%10.3e" %
+            print("%10d\t%10.3e\t%10.3e\t%10.3e\t%10.3e\t%10.3e" %
                   (step,
                    float('nan'),
                    loss_G.item(),
-                   loss_D.item(),
+                   score_true.item(),
+                   score_fake.item(),
                    reg_D.item()
                    ))
 
             if step % output_step != 0:
                 continue
 
-            im_hat = G.x.detach().cpu().squeeze().numpy()
+            x_hat = G.x.detach().cpu().squeeze().numpy()
             #vmin, vmax = im.min(), im.max()
             #vmin, vmax = 0, 1
 
             fig, ax = plt.subplots()
             ax.set_title('reconstruction')
-            im_h = ax.imshow(im_hat)
+            im_h = ax.imshow(x_hat)
             fig.colorbar(im_h, ax=ax)
                          
             #fig, ax = plt.subplots(1, 3, figsize=(8,2))
@@ -121,11 +120,11 @@ def train_WGAN(D, G, dataset_true,
             #ax[0].set_title('ground truth')
             #fig.colorbar(im_h, ax=ax[0])
 
-            #im_h = ax[1].imshow(im_hat, vmin=vmin, vmax=vmax)
+            #im_h = ax[1].imshow(x_hat, vmin=vmin, vmax=vmax)
             #ax[1].set_title('reconstruction')
             #fig.colorbar(im_h, ax=ax[1])
 
-            #im_h = ax[2].imshow(abs(im-im_hat))
+            #im_h = ax[2].imshow(abs(im-x_hat))
             #ax[2].set_title('absolute error')
             #fig.colorbar(im_h, ax=ax[2])
 
@@ -133,8 +132,9 @@ def train_WGAN(D, G, dataset_true,
             fig.savefig(os.path.join(out_folder,f'im_{step}.png'))    
             plt.close(fig)
 
-            fig, ax = plt.subplots(2, batch_size, squeeze=False)
-            for ind in range(batch_size):
+            num_plots = min(batch_size, 5)
+            fig, ax = plt.subplots(2, num_plots, squeeze=False)
+            for ind in range(num_plots):
                 ax[0,ind].imshow(y_fake[ind].cpu())
                 ax[1,ind].imshow(y_true[ind].cpu())
 
