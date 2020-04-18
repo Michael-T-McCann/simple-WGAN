@@ -9,3 +9,6 @@ class GeneratorWrapper(torch.utils.data.IterableDataset):
 
     def __iter__(self):
         return self
+
+    def to(self, device):
+        self.G = self.G.to(device)

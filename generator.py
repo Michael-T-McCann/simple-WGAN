@@ -2,26 +2,43 @@ import numpy as np
 import torch
 import torchvision
 
-class NoisyImage(torch.nn.Module):
-    def __init__(self, size=None, sigma=0.0, x0=None, do_masking=False):
+"""
+Q: Why are these modules when they could be functions?
+A: It makes it easy to chain them together and also allows more parameters 
+to be learned than just x.
+
+"""
+
+class Generator(torch.nn.Module):
+    def __init__(self, shape=None, x0=None, model=None):
         super().__init__()
 
-        self.do_masking = do_masking
-
-        self.sigma = sigma
+        self.model = model
         
         if x0 is None:
-            self.x = torch.nn.Parameter(torch.zeros(size))
+            self.x = torch.nn.Parameter(torch.zeros(shape))
         else:
             self.x = torch.nn.Parameter(torch.tensor(x0, dtype=torch.float))
-                
+    
     def forward(self):
-        self.zero = torch.zeros_like(self.x)  # todo: make once, put on GPU
-        x = self.x
-        if self.do_masking:
-            mask = torch.rand_like(x) > 0.5
-            x = torch.where(mask, x, self.zero)
+        return self.model(self.x)
 
-        x = x + self.sigma * torch.randn_like(x)
+class AddNoise(torch.nn.Module):
+    def __init__(self, sigma=1.0):
+        super().__init__()
+        self.sigma = sigma
                 
-        return x
+    def forward(self, x):
+        return x + self.sigma * torch.randn_like(x)
+
+    
+class Mask(torch.nn.Module):
+    def __init__(self, fraction=0.5):
+        super().__init__()
+        self.fraction = fraction
+
+    def forward(self, x):
+        mask = torch.rand_like(x) > self.fraction
+        return x * mask
+        
+    
