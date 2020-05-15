@@ -136,7 +136,7 @@ def train_WGAN(D, G, dataset_true,
             fig, ax = plt.subplots(2, num_plots, squeeze=False)
             for ind in range(num_plots):
                 ax[0,ind].imshow(y_fake[ind].detach().cpu())
-                ax[1,ind].imshow(y_true[ind].deatch().cpu())
+                ax[1,ind].imshow(y_true[ind].detach().cpu())
 
             ax[0,0].set_ylabel('fake', rotation=0)
             ax[1,0].set_ylabel('true', rotation=0)
