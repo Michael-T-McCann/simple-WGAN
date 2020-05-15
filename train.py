@@ -28,7 +28,7 @@ def train_WGAN(D, G, dataset_true,
     # setup
     Y_true = iter(torch.utils.data.DataLoader(
         dataset_true, batch_size=batch_size))
-    
+
     Y_fake = iter(torch.utils.data.DataLoader(
         dataset.GeneratorWrapper(G), batch_size=batch_size))
 
@@ -77,7 +77,7 @@ def train_WGAN(D, G, dataset_true,
             )
             optim_D.zero_grad()
             reg_D.backward()
-            optim_D.step()     
+            optim_D.step()
 
         for inner_step in range(num_steps_G):
             G.requires_grad_(True)
@@ -114,7 +114,7 @@ def train_WGAN(D, G, dataset_true,
             ax.set_title('reconstruction')
             im_h = ax.imshow(x_hat)
             fig.colorbar(im_h, ax=ax)
-                         
+
             #fig, ax = plt.subplots(1, 3, figsize=(8,2))
             #im_h = ax[0].imshow(im, vmin=vmin, vmax=vmax)
             #ax[0].set_title('ground truth')
@@ -129,14 +129,14 @@ def train_WGAN(D, G, dataset_true,
             #fig.colorbar(im_h, ax=ax[2])
 
             fig.tight_layout()
-            fig.savefig(os.path.join(out_folder,f'im_{step}.png'))    
+            fig.savefig(os.path.join(out_folder,f'im_{step}.png'))
             plt.close(fig)
 
             num_plots = min(batch_size, 5)
             fig, ax = plt.subplots(2, num_plots, squeeze=False)
             for ind in range(num_plots):
-                ax[0,ind].imshow(y_fake[ind].cpu())
-                ax[1,ind].imshow(y_true[ind].cpu())
+                ax[0,ind].imshow(y_fake[ind].detach().cpu())
+                ax[1,ind].imshow(y_true[ind].deatch().cpu())
 
             ax[0,0].set_ylabel('fake', rotation=0)
             ax[1,0].set_ylabel('true', rotation=0)
@@ -144,5 +144,5 @@ def train_WGAN(D, G, dataset_true,
 
             fig.savefig(os.path.join(out_folder, f'batch_{step}.png'))
             plt.close(fig)
-           
+
     return G, D
