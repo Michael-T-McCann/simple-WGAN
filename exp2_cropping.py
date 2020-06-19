@@ -39,6 +39,9 @@ forward_model = torch.nn.Sequential(
     generator.AddNoise(sigma=0.1))
 
 G_true = generator.Generator(x0=x_GT, model=forward_model)
+
+# todo: G_true.requires_grad_(False) ?
+
     
 dataset_true = dataset.GeneratorWrapper(G_true)
 

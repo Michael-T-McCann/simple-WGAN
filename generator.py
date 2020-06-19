@@ -47,8 +47,8 @@ class RandomCrop(torch.nn.Module):
         self.crop_shape = crop_shape
 
     def forward(self, x):
-        m = np.random.randint(0, x.shape[0]-self.crop_shape[0])
-        n = np.random.randint(0, x.shape[1]-self.crop_shape[1])
+        m = np.random.randint(0, x.shape[0]-self.crop_shape[0]+1)
+        n = np.random.randint(0, x.shape[1]-self.crop_shape[1]+1)
         return x[m:m+self.crop_shape[0], n:n+self.crop_shape[1]]        
         
     
