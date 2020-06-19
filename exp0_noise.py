@@ -7,7 +7,12 @@ import sys
 
 import dataset, generator, discriminator, train
 
-# setup output directory
+
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+else:
+    device = torch.device("cpu")
+
 def SweepThru(noiseSigma = 0.4,ns = 5, bs = 3, lr_G = 1e-2, lr_D = 1e-2, 
 ns_G = 3, ns_D = 3, regW = 1e1, path = "dir"):
 
@@ -69,12 +74,14 @@ ns_G = 3, ns_D = 3, regW = 1e1, path = "dir"):
                             num_steps=ns, batch_size=bs,
                             learning_rate_G=lr_G, learning_rate_D=lr_D,
                             num_steps_G=ns_G, num_steps_D=ns_G,
-                            reg_weight=regW, device=torch.device('cpu'),
+                            reg_weight=regW, device=device,
                         out_folder=outdir,x_gt = x_GT)  
  #print(D)
  
  
  
+
+
 
 noise_sigmas = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9] 
 t = time.strftime("%Y%m%d-%H%M%S")
@@ -83,4 +90,4 @@ os.makedirs("results/" + t + "sigmaTrials")
  
 
 for sig in noise_sigmas:
-    SweepThru(noiseSigma=sig, path = (t+"sigmaTrials")) 
+    SweepThru(noiseSigma=sig, path = (t+"sigmaTrials"))
