@@ -13,8 +13,7 @@ if torch.cuda.is_available():
 else:
     device = torch.device("cpu")
 
-def SweepThru(noiseSigma = 0.4,ns = 5, bs = 3, lr_G = 1e-2, lr_D = 1e-2, 
-ns_G = 3, ns_D = 3, regW = 1e1, path = "dir"):
+def SweepThru(noiseSigma = 0.4,ns = 5, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G = 3, ns_D = 3, regW = 1e1, path = "dir"):
 
     outdir = os.path.join(
         'results', path, 
@@ -29,7 +28,7 @@ ns_G = 3, ns_D = 3, regW = 1e1, path = "dir"):
     x_GT = x_GT[100:100+256, 400:400+256]  
     x_GT = x_GT - np.mean(x_GT)    
 
-"""
+    """
     #------------------------------------------------    
     x_GT = cv2.imread("images/dice.jpg",1)  
     print(x_GT)
@@ -47,7 +46,8 @@ ns_G = 3, ns_D = 3, regW = 1e1, path = "dir"):
     x_GT = x_GT - np.mean(x_GT)    
     #print(x_GT)  
     #------------------------------------------------
-"""
+    """
+
     forward_model = generator.AddNoise(sigma = noiseSigma)     
 
     G_true = generator.Generator(x0=x_GT, model=forward_model)
