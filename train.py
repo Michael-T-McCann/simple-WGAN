@@ -22,7 +22,6 @@ def train_WGAN(D, G, dataset_true,
 
     # -----
 
-    x_gt = torch.tensor(x_gt,device=device)
 
     fig, ax = plt.subplots()
 
@@ -33,7 +32,8 @@ def train_WGAN(D, G, dataset_true,
     fig.savefig(os.path.join(out_folder,f'GroundTruth.png'))
     plt.close(fig)
 
- 
+    x_gt = torch.tensor(x_gt,device=device)
+
 
     D = D.to(device)
     G = G.to(device)
