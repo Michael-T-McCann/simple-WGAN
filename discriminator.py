@@ -18,8 +18,8 @@ class ConvMax(nn.Module):
             nn.ReLU(),
 
             nn.MaxPool2d(2, stride=2),
-            ])
-
+        ])
+  
         num_pooling = 2
         
         self.FC_layers = nn.ModuleList([

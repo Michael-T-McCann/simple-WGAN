@@ -5,4 +5,6 @@ dependencies:
   - pytorch::torchvision=0.5.0
   - cudatoolkit
   - scipy=1.4.1
-  - matplotlib
+  - matplotlib 
+  - pip:
+    - opencv-python

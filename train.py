@@ -1,16 +1,19 @@
 import torch
 import os
 import matplotlib.pyplot as plt
+import numpy as np
 
 import dataset
-
+import sys
+# save the output into the sam dir 
+# check the logging package  
 def train_WGAN(D, G, dataset_true,
                num_steps=10, batch_size=1,
                learning_rate_G=1.0, learning_rate_D=1.0,
                num_steps_G=1, num_steps_D=1,
                reg_weight=1.0,
                device=torch.device('cpu'), out_folder='',
-               output_step=1):
+               output_step=1, x_gt = []):
 
     # todo: this shouldn't go here, nor should all the plotting at the end
     # could I refactor with a yield?
@@ -19,14 +22,26 @@ def train_WGAN(D, G, dataset_true,
 
     # -----
 
+    x_gt = torch.tensor(x_gt,device=device)
+
+    fig, ax = plt.subplots()
+
+    ax.set_title('Ground Truth')
+    im_h = ax.imshow(x_gt)
+    fig.colorbar(im_h, ax=ax)
+    fig.tight_layout()
+    fig.savefig(os.path.join(out_folder,f'GroundTruth.png'))
+    plt.close(fig)
+
+ 
 
     D = D.to(device)
     G = G.to(device)
 
-    dataset_true.to(device)
-
+    dataset_true.to(device) 
+ 
     # setup
-    Y_true = iter(torch.utils.data.DataLoader(
+    Y_true = iter(torch.utils.data.DataLoader( 
         dataset_true, batch_size=batch_size))
 
     Y_fake = iter(torch.utils.data.DataLoader(
@@ -36,6 +51,8 @@ def train_WGAN(D, G, dataset_true,
     optim_G = torch.optim.Adam(G.parameters(), lr=learning_rate_G)
     optim_D = torch.optim.Adam(D.parameters(), lr=learning_rate_D)
 
+    resPath =  out_folder + '/' + "res.txt"
+    sys.stdout = open(resPath, "w")
     # main loop
     print('%10s\t%10s\t%10s\t%10s\t%10s\t%10s'
           % ('step', 'x-x_GT', 'loss_G', 'D(true)', 'D(fake)', 'loss_D_reg'))
@@ -43,10 +60,10 @@ def train_WGAN(D, G, dataset_true,
         # update D
         for inner_step in range(num_steps_D):
             G.requires_grad_(False)
-            D.requires_grad_(True)
+            D.requires_grad_(True)   
 
             y_true = next(Y_true)
-            y_fake = next(Y_fake)
+            y_fake = next(Y_fake) 
 
             score_true = torch.mean(D(y_true))
             score_fake = torch.mean(D(y_fake))
@@ -94,12 +111,15 @@ def train_WGAN(D, G, dataset_true,
 
         # print loss, make plots
         with torch.no_grad():
+            x_hat = G.x.detach()
+            mse = (x_hat - x_gt).pow(2).mean()
+
             print("%10d\t%10.3e\t%10.3e\t%10.3e\t%10.3e\t%10.3e" %
                   (step,
-                   float('nan'),
+                   float(mse),
                    loss_G.item(),
                    score_true.item(),
-                   score_fake.item(),
+                   score_fake.item(),  
                    reg_D.item()
                    ))
 
@@ -109,7 +129,7 @@ def train_WGAN(D, G, dataset_true,
             x_hat = G.x.detach().cpu().squeeze().numpy()
             #vmin, vmax = im.min(), im.max()
             #vmin, vmax = 0, 1
-
+            
             fig, ax = plt.subplots()
             ax.set_title('reconstruction')
             im_h = ax.imshow(x_hat)
