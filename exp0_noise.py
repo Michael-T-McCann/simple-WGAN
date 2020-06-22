@@ -13,7 +13,7 @@ if torch.cuda.is_available():
 else:
     device = torch.device("cpu")
 
-def SweepThru(noiseSigma = 0.4,ns = 5, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G = 3, ns_D = 3, regW = 1e1, path = "dir"):
+def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G = 3, ns_D = 3, regW = 1e1, path = "dir"):
 
     outdir = os.path.join(
         'results', path, 
