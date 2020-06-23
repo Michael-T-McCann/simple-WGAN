@@ -20,7 +20,7 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
         'noise_' + time.strftime("%Y%m%d-%H%M%S"))
 
     os.makedirs(outdir) 
-
+ 
   
     # true data distribution     
     x_GT = scipy.misc.face()
@@ -83,11 +83,11 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
 
 
 
-noise_sigmas = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9] 
+#noise_sigmas = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]  
+num_steps_dis = [1,2,3,4,5,6,7,8,9,10]
 t = time.strftime("%Y%m%d-%H%M%S")
 
-os.makedirs("results/" + t + "sigmaTrials")
- 
+os.makedirs("results/" + t + "D_step_Trials")
 
-for sig in noise_sigmas:
-    SweepThru(noiseSigma=sig, path = (t+"sigmaTrials"))
+for D_step in num_steps_dis: 
+    SweepThru(ns_D = D_step, path = (t+"D_step_Trials")) 
