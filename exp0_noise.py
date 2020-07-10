@@ -58,7 +58,7 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
     G = generator.Generator(shape=x_GT.shape, model=forward_model)
 
     # discriminator   
-    D = discriminator.ConvMax(x_GT.size)     
+    D = discriminator.ConvMax(x_GT.size)      
      
     testPath =  outdir + '/' + "testValues.txt"
     sys.stdout = open(testPath, "w")  
@@ -66,7 +66,7 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
     print("Num Steps: ", ns,"\nBatch Size: ",bs,"\nLearning Rate G: ", lr_G,
     "\nLearning Rate D: ", lr_D,"\nNum Steps G: ", ns_G,"\nNum Steps D: ", ns_D, 
     "\nReg Weight: ", regW,"\nNoise Sigma: ",noiseSigma) 
-
+ 
     sys.stdout.close
 
     # training
@@ -77,19 +77,18 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
                             reg_weight=regW, device=device,
                         out_folder=outdir,x_gt = x_GT)  
  #print(D)
- 
- 
- 
 
+  
 
 
 #noise_sigmas = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]  
 #num_steps_dis = [1,2,3,4,5,6,7,8,9,10]
-num_steps_gen = [1,2,3,4,5,6,7,8,9,10] 
+#num_steps_gen = [1,2,3,4,5,6,7,8,9,10] 
+batchSizes = [4,5,6,7,8,9]
 
 t = time.strftime("%Y%m%d-%H%M%S")
 
-os.makedirs("results/" + t + "G_step_Trials")
+os.makedirs("results/" + t + "G_step_Trials")   
 
-for G_step in num_steps_gen:  
-    SweepThru(ns_G = G_step, path = (t+"G_step_Trials")) 
+for inc in batchSizes:  
+    SweepThru(bs = inc, path = (t+"Batch_Trials"))    

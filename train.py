@@ -20,8 +20,7 @@ def train_WGAN(D, G, dataset_true,
     plt.set_cmap('gray')
 
 
-    # -----
-
+    # ----- 
 
     fig, ax = plt.subplots()
 
@@ -31,8 +30,8 @@ def train_WGAN(D, G, dataset_true,
     fig.tight_layout()
     fig.savefig(os.path.join(out_folder,f'GroundTruth.png'))
     plt.close(fig)
-
-    x_gt = torch.tensor(x_gt,device=device)
+ 
+    x_gt = torch.tensor(x_gt,device=device)  
 
 
     D = D.to(device)
@@ -55,7 +54,12 @@ def train_WGAN(D, G, dataset_true,
     sys.stdout = open(resPath, "w")
     # main loop
     print('%10s\t%10s\t%10s\t%10s\t%10s\t%10s'
-          % ('step', 'x-x_GT', 'loss_G', 'D(true)', 'D(fake)', 'loss_D_reg'))
+          % ('step', 'x-x_GT', 'loss_G', 'D(true)', 'D(fake)', 'loss_D_reg')) 
+
+    count = 0 
+    rolling_sum = 1
+    average = 1
+
     for step in range(num_steps):
         # update D
         for inner_step in range(num_steps_D):
@@ -66,9 +70,9 @@ def train_WGAN(D, G, dataset_true,
             y_fake = next(Y_fake) 
 
             score_true = torch.mean(D(y_true))
-            score_fake = torch.mean(D(y_fake))
+            score_fake = torch.mean(D(y_fake)) 
 
-            loss_D = -score_true + score_fake
+            loss_D = -score_true + score_fake 
 
             optim_D.zero_grad()
             loss_D.backward()
@@ -111,17 +115,26 @@ def train_WGAN(D, G, dataset_true,
 
         # print loss, make plots
         with torch.no_grad():
-            x_hat = G.x.detach()
-            mse = (x_hat - x_gt).pow(2).mean()
+            x_hat = G.x.detach() 
+         #   y_true = D.x.detach() 
 
+            
+            mse = (x_hat - x_gt).pow(2).mean()  
+            
+            rolling_sum += y_true 
+            average = rolling_sum / (count * batch_size)  
+            count += 1  
+
+            print("Avg: ", average)
             print("%10d\t%10.3e\t%10.3e\t%10.3e\t%10.3e\t%10.3e" %
                   (step,
                    float(mse),
                    loss_G.item(),
                    score_true.item(),
                    score_fake.item(),  
-                   reg_D.item()
-                   ))
+                   reg_D.item(), 
+                   )) 
+
 
             if step % output_step != 0:
                 continue
@@ -166,3 +179,7 @@ def train_WGAN(D, G, dataset_true,
             plt.close(fig)
 
     return G, D
+
+
+# scp -r /home/mhuwio/GanTests/simple-WGAN/results huwiomuh@scully.egr.msu.edu:~/ResultStation
+#scp -o ProxyCommand="ssh huwiomuh@scully.egr.msu.edu nc mhuwio@35.12.218.162:22"  mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results /Users/moehuwio/MLtests/simple-WGAN/results
