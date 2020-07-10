@@ -125,13 +125,15 @@ def train_WGAN(D, G, dataset_true,
             average = rolling_sum / (count * batch_size)  
             count += 1  
 
-            print("Avg: ", average)
+            AvgMSE = (average - x_gt).pow(2).mean()  
+
+            print("Avg: ", float(AvgMSE))
             print("%10d\t%10.3e\t%10.3e\t%10.3e\t%10.3e\t%10.3e" %
                   (step,
                    float(mse),
                    loss_G.item(),
-                   score_true.item(),
-                   score_fake.item(),  
+                   score_true.item(), 
+                   score_fake.item(),   
                    reg_D.item(), 
                    )) 
 
