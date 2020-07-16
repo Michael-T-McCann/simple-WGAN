@@ -3,20 +3,24 @@ import matplotlib.pyplot as plt
 import pandas as pd 
 
 def PlotRes(path):
-    data = pd.read_csv(path + '/res.txt', sep="\t", header=None)  
-    MSE_xGT = data[1]  
-    MSE_xGT = MSE_xGT[1:]
-    MSE_xGT = MSE_xGT.to_numpy()
-    MSE_xGT = MSE_xGT.astype(float)
+    print("\nThis is the path that should be working but its not :(\t\t\t", path)
 
-    MSE_AVG = data[6]  
-    MSE_AVG = MSE_AVG[1:]
-    MSE_AVG = MSE_AVG.to_numpy()
-    MSE_AVG = MSE_AVG.astype(float) 
-    MSE_AVG[0] = 0.0
+    alsoData = np.loadtxt(path + '/res.txt',delimiter = '\t', dtype='float')
+    print(alsoData)
+   # data = pd.read_csv(path + '/res.txt', sep="\t", header=None)  
+    #MSE_xGT = data[1]  
+    #MSE_xGT = MSE_xGT[1:]
+    #MSE_xGT = MSE_xGT.to_numpy()
+    #MSE_xGT = MSE_xGT.astype(float)
+
+    #MSE_AVG = data[6]
+   # MSE_AVG = MSE_AVG[1:]
+   # MSE_AVG = MSE_AVG.to_numpy()
+  #  MSE_AVG = MSE_AVG.astype(float) 
+   # MSE_AVG[0] = 0.0 
  
     
-    plt.plot(np.arange(100),MSE_xGT, label = 'MSE: x-x_GT')
-    plt.plot(np.arange(100),MSE_AVG, label = 'MSE: Avgeraging')  
+   # plt.plot(np.arange(100),MSE_xGT, label = 'MSE: x-x_GT')
+   # plt.plot(np.arange(100),MSE_AVG, label = 'MSE: Avgeraging')  
 
     plt.savefig(path + '/ResultGraph.png') 
