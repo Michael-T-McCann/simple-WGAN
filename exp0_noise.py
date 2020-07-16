@@ -5,8 +5,8 @@ import numpy as np
 from cv2 import cv2  
 import sys
 
+from plots import PlotRes
 import dataset, generator, discriminator, train
-
 
 if torch.cuda.is_available():
     device = torch.device("cuda")
@@ -20,7 +20,7 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
         'noise_' + time.strftime("%Y%m%d-%H%M%S"))
 
     os.makedirs(outdir) 
- 
+
   
     # true data distribution     
     x_GT = scipy.misc.face()
@@ -43,7 +43,7 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
     # Resize the image using cv2 
     x_GT = np.mean(x_GT/255, axis=2)    
     #x_GT = x_GT[100:100+256, 400:400+256]       
-    x_GT = x_GT - np.mean(x_GT)    
+    x_GT = x_GT - np.mean(x_GT)
     #print(x_GT)  
     #------------------------------------------------
     """
@@ -75,7 +75,9 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
                             learning_rate_G=lr_G, learning_rate_D=lr_D,
                             num_steps_G=ns_G, num_steps_D=ns_G,
                             reg_weight=regW, device=device,
-                        out_folder=outdir,x_gt = x_GT)  
+                        out_folder=outdir,x_gt = x_GT)   
+    
+    PlotRes(outdir)
  #print(D)
 
   
@@ -84,11 +86,11 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
 #noise_sigmas = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]  
 #num_steps_dis = [1,2,3,4,5,6,7,8,9,10]
 #num_steps_gen = [1,2,3,4,5,6,7,8,9,10] 
-batchSizes = [4,5,6,7,8,9]
+batchSizes = [4,5,6,7,8,9]        
 
 t = time.strftime("%Y%m%d-%H%M%S")
 
 os.makedirs("results/" + t + "G_step_Trials")   
 
 for inc in batchSizes:  
-    SweepThru(bs = inc, path = (t+"Batch_Trials"))    
+    SweepThru(bs = inc, path = (t+"Batch_Trials"))
