@@ -14,17 +14,18 @@ else:
     device = torch.device("cpu")
 
 def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G = 3, ns_D = 3, regW = 1e1, path = "dir"):
-
+    
+    t = time.strftime("%Y%m%d-%H%M%S")
     outdir = os.path.join(
         'results', path, 
-        'noise_' + time.strftime("%Y%m%d-%H%M%S"))
+        'noise_' + t)
 
-    os.makedirs(outdir) 
+    os.makedirs(path,t)
 
   
     # true data distribution     
     x_GT = scipy.misc.face()
-    x_GT = np.mean(x_GT/255, axis=2)   
+    x_GT = np.mean(x_GT/255, axis=2)
     x_GT = x_GT[100:100+256, 400:400+256]  
     x_GT = x_GT - np.mean(x_GT)    
 
@@ -75,12 +76,12 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
                             learning_rate_G=lr_G, learning_rate_D=lr_D,
                             num_steps_G=ns_G, num_steps_D=ns_G,
                             reg_weight=regW, device=device,
-                        out_folder=outdir,x_gt = x_GT)   
+                        out_folder=outdir,x_gt = x_GT)  
+
     
-    PlotRes(outdir)
+    PlotRes('./results/' + path + '/' + 'noise_' + t)
  #print(D)
 
-  
 
 
 #noise_sigmas = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]  
@@ -89,8 +90,6 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
 batchSizes = [4,5,6,7,8,9]        
 
 t = time.strftime("%Y%m%d-%H%M%S")
-
-os.makedirs("results/" + t + "G_step_Trials")   
 
 for inc in batchSizes:  
     SweepThru(bs = inc, path = (t+"Batch_Trials"))
