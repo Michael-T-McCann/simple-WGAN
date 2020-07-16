@@ -6,5 +6,6 @@ dependencies:
   - cudatoolkit
   - scipy=1.4.1
   - matplotlib 
+  - pandas
   - pip:
     - opencv-python
