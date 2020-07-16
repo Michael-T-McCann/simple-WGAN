@@ -70,7 +70,6 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
  
     sys.stdout.close
 
-    PlotRes('./results/' + path + '/' + 'noise_' + t)
 
     # training
     G, D = train.train_WGAN(D, G, dataset_true,
@@ -82,6 +81,7 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
 
     
  #print(D)
+    PlotRes('./results/' + path + '/' + 'noise_' + t)
 
 
 
