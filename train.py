@@ -181,17 +181,19 @@ def train_WGAN(D, G, dataset_true,
             fig.savefig(os.path.join(out_folder, f'batch_{step}.png'))
             plt.close(fig)
 
-    fig, ax = plt.subplots()
-    fig.tight_layout()
-    average.detach().cpu().squeeze().numpy()
-    ax.set_title('Average')
-    im_h = ax.imshow(average)
-    fig.colorbar(im_h, ax=ax)
-    fig.savefig(os.path.join(out_folder,f'AvgerageC.png'))
-    plt.close(fig)
+ 
 
     return G, D 
 
 
+
+    #fig, ax = plt.subplots()
+    #fig.tight_layout()
+    #average.detach().cpu().squeeze().numpy()
+    #ax.set_title('Average')
+    #im_h = ax.imshow(average)
+    #fig.colorbar(im_h, ax=ax)
+    #fig.savefig(os.path.join(out_folder,f'AvgerageC.png'))
+    #plt.close(fig)
 # scp -r /home/mhuwio/GanTests/simple-WGAN/results huwiomuh@scully.egr.msu.edu:~/ResultStation
 #scp -o ProxyCommand="ssh huwiomuh@scully.egr.msu.edu nc mhuwio@35.12.218.162:22"  mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results /Users/moehuwio/MLtests/simple-WGAN/results
