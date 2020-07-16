@@ -20,7 +20,7 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
         'results', path, 
         'noise_' + t)
 
-    os.makedirs(path,t)
+    os.makedirs(outdir)
 
   
     # true data distribution     
