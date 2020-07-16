@@ -182,11 +182,15 @@ def train_WGAN(D, G, dataset_true,
             plt.close(fig)
 
     fig, ax = plt.subplots()
+    fig.tight_layout()
+    average.detach().cpu().squeeze().numpy()
     ax.set_title('Average')
     im_h = ax.imshow(average)
     fig.colorbar(im_h, ax=ax)
+    fig.savefig(os.path.join(out_folder,f'AvgerageC.png'))
+    plt.close(fig)
 
-    return G, D
+    return G, D 
 
 
 # scp -r /home/mhuwio/GanTests/simple-WGAN/results huwiomuh@scully.egr.msu.edu:~/ResultStation
