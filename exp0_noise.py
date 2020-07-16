@@ -89,7 +89,9 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
 #num_steps_gen = [1,2,3,4,5,6,7,8,9,10] 
 batchSizes = [4,5,6,7,8,9]        
 
-t = time.strftime("%Y%m%d-%H%M%S")
+t = time.strftime("%Y%m%d-%H%M%S") 
+
+os.makedirs("results/" + t + "Batch_Trials")   
 
 for inc in batchSizes:  
     SweepThru(bs = inc, path = (t+"Batch_Trials"))
