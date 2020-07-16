@@ -53,8 +53,8 @@ def train_WGAN(D, G, dataset_true,
     resPath =  out_folder + '/' + "res.txt"
     sys.stdout = open(resPath, "w")
     # main loop
-    print('%10s\t%10s\t%10s\t%10s\t%10s\t%10s'
-          % ('step', 'x-x_GT', 'loss_G', 'D(true)', 'D(fake)', 'loss_D_reg')) 
+    print('%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s'
+          % ('step', 'x-x_GT (MSE)', 'loss_G', 'D(true)', 'D(fake)', 'loss_D_reg', 'Avg(MSE)')) 
 
     count = 0 
     rolling_sum = 1
@@ -122,21 +122,22 @@ def train_WGAN(D, G, dataset_true,
             mse = (x_hat - x_gt).pow(2).mean()  
             
             rolling_sum += y_true 
-            average = rolling_sum / (count * batch_size)  
+            average = rolling_sum / (count * batch_size * num_steps_D)  
             count += 1  
 
             AvgMSE = (average - x_gt).pow(2).mean()  
 
-            print("Avg: ", float(AvgMSE))
-            print("%10d\t%10.3e\t%10.3e\t%10.3e\t%10.3e\t%10.3e" %
+          #  print("Avg: ", float(AvgMSE))
+            print("%10d\t%10.3e\t%10.3e\t%10.3e\t%10.3e\t%10.3e\t%10.3e" %
                   (step,
                    float(mse),
-                   loss_G.item(),
-                   score_true.item(), 
-                   score_fake.item(),   
-                   reg_D.item(), 
+                   float(loss_G.item()),
+                   float(score_true.item()), 
+                   float(score_fake.item()),   
+                   float(reg_D.item()),
+                   float(AvgMSE)
                    )) 
-
+ 
 
             if step % output_step != 0:
                 continue
@@ -179,6 +180,11 @@ def train_WGAN(D, G, dataset_true,
 
             fig.savefig(os.path.join(out_folder, f'batch_{step}.png'))
             plt.close(fig)
+
+    fig, ax = plt.subplots()
+    ax.set_title('Average')
+    im_h = ax.imshow(average)
+    fig.colorbar(im_h, ax=ax)
 
     return G, D
 
