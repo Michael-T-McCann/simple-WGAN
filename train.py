@@ -182,7 +182,7 @@ def train_WGAN(D, G, dataset_true,
             plt.close(fig)
 
  
-
+    sys.stdout.close
     return G, D 
 
 
