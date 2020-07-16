@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd 
 
 def PlotRes(path):
-    data = pd.read_csv((path + '/res.txt'), sep="\t", header=None)  
+    data = pd.read_csv(path + '/res.txt', sep="\t", header=None)  
     MSE_xGT = data[1]  
     MSE_xGT = MSE_xGT[1:]
     MSE_xGT = MSE_xGT.to_numpy()
