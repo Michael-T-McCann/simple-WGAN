@@ -5,6 +5,11 @@ import sys
 
 def PlotRes(path):
     sys.stdout.close
+
+    f = open(path + '/res.txt') 
+    print(f.read()) 
+    f.close() 
+    
     print("\nThis is the path that should be working but its not :(\t\t\t", path)
 
     alsoData = np.loadtxt(path + '/res.txt',delimiter = '\t', dtype='float')
