@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd 
 
 def PlotRes(outdir):
-    data = pd.read_csv(outdir+'/res.txt', sep="\t", header=None)  
+    data = pd.read_csv('./'+outdir+'/res.txt', sep="\t", header=None)  
     MSE_xGT = data[1]  
     MSE_xGT = MSE_xGT[1:]
     MSE_xGT = MSE_xGT.to_numpy()
@@ -19,4 +19,4 @@ def PlotRes(outdir):
     plt.plot(np.arange(100),MSE_xGT, label = 'MSE: x-x_GT')
     plt.plot(np.arange(100),MSE_AVG, label = 'MSE: Avgeraging')  
 
-    plt.savefig(outdir + '/ResultGraph.png')
+    plt.savefig(outdir + '/ResultGraph.png') 
