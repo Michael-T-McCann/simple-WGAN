@@ -18,8 +18,8 @@ def PlotRes(path):
     MSE_AVG[0] = 0.0 
  
     
-    plt.plot(np.arange(100),MSE_xGT, label = 'MSE: x-x_GT')
-    plt.plot(np.arange(102),MSE_AVG, label = 'MSE: Avgeraging')  
+    plt.plot(np.arange(len(MSE_xGT)),MSE_xGT, label = 'MSE: x-x_GT')
+    plt.plot(np.arange(len(MSE_AVG)),MSE_AVG, label = 'MSE: Avgeraging')  
 
     plt.savefig(path + '/ResultGraph.png') 
 
