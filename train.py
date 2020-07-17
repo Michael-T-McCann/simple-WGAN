@@ -1,12 +1,13 @@
 import torch
 import os
 import matplotlib.pyplot as plt
-import numpy as np
+import logging
+import pandas as pd
 
 import dataset
-import sys
-# save the output into the sam dir 
-# check the logging package  
+
+# save the output into the sam dir
+# check the logging package
 def train_WGAN(D, G, dataset_true,
                num_steps=10, batch_size=1,
                learning_rate_G=1.0, learning_rate_D=1.0,
@@ -20,7 +21,7 @@ def train_WGAN(D, G, dataset_true,
     plt.set_cmap('gray')
 
 
-    # ----- 
+    # -----
 
     fig, ax = plt.subplots()
 
@@ -30,17 +31,17 @@ def train_WGAN(D, G, dataset_true,
     fig.tight_layout()
     fig.savefig(os.path.join(out_folder,f'GroundTruth.png'))
     plt.close(fig)
- 
-    x_gt = torch.tensor(x_gt,device=device)  
+
+    x_gt = torch.tensor(x_gt,device=device)
 
 
     D = D.to(device)
     G = G.to(device)
 
-    dataset_true.to(device) 
- 
+    dataset_true.to(device)
+
     # setup
-    Y_true = iter(torch.utils.data.DataLoader( 
+    Y_true = iter(torch.utils.data.DataLoader(
         dataset_true, batch_size=batch_size))
 
     Y_fake = iter(torch.utils.data.DataLoader(
@@ -50,13 +51,16 @@ def train_WGAN(D, G, dataset_true,
     optim_G = torch.optim.Adam(G.parameters(), lr=learning_rate_G)
     optim_D = torch.optim.Adam(D.parameters(), lr=learning_rate_D)
 
-    resPath =  out_folder + '/' + "res.txt"
-    sys.stdout = open(resPath, "w")
-    # main loop
-    print('%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s'
-          % ('step', 'x-x_GT (MSE)', 'loss_G', 'D(true)', 'D(fake)', 'loss_D_reg', 'Avg(MSE)')) 
 
-    count = 0 
+    # main loop
+    col_names = (
+        'step', 'x-x_GT (MSE)', 'loss_G', 'D(true)',
+        'D(fake)', 'loss_D_reg', 'Avg(MSE)')
+    logging.info('%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s'
+                 % col_names)
+    history = pd.DataFrame(columns=col_names)
+
+    count = 0
     rolling_sum = 1
     average = 1
 
@@ -64,15 +68,15 @@ def train_WGAN(D, G, dataset_true,
         # update D
         for inner_step in range(num_steps_D):
             G.requires_grad_(False)
-            D.requires_grad_(True)   
+            D.requires_grad_(True)
 
             y_true = next(Y_true)
-            y_fake = next(Y_fake) 
+            y_fake = next(Y_fake)
 
             score_true = torch.mean(D(y_true))
-            score_fake = torch.mean(D(y_fake)) 
+            score_fake = torch.mean(D(y_fake))
 
-            loss_D = -score_true + score_fake 
+            loss_D = -score_true + score_fake
 
             optim_D.zero_grad()
             loss_D.backward()
@@ -115,29 +119,36 @@ def train_WGAN(D, G, dataset_true,
 
         # print loss, make plots
         with torch.no_grad():
-            x_hat = G.x.detach() 
-         #   y_true = D.x.detach() 
+            x_hat = G.x.detach()
+         #   y_true = D.x.detach()
 
-            
-            mse = (x_hat - x_gt).pow(2).mean()  
-            
-            rolling_sum += y_true 
-            average = rolling_sum / (count * batch_size * num_steps_D)  
-            count += 1  
 
-            AvgMSE = (average - x_gt).pow(2).mean()  
+            mse = (x_hat - x_gt).pow(2).mean()
 
-          #  print("Avg: ", float(AvgMSE))
-            print("%10d\t%10.3e\t%10.3e\t%10.3e\t%10.3e\t%10.3e\t%10.3e" %
-                  (step,
+            rolling_sum += y_true
+            average = rolling_sum / (count * batch_size * num_steps_D)
+            count += 1
+
+            AvgMSE = (average - x_gt).pow(2).mean()
+
+            #  print("Avg: ", float(AvgMSE))
+            current_history = (step,
                    float(mse),
                    float(loss_G.item()),
-                   float(score_true.item()), 
-                   float(score_fake.item()),   
+                   float(score_true.item()),
+                   float(score_fake.item()),
                    float(reg_D.item()),
                    float(AvgMSE)
-                   )) 
- 
+                   )
+            logging.info(
+                "%10d\t%10.3e\t%10.3e\t%10.3e\t%10.3e\t%10.3e\t%10.3e" %
+                current_history
+            )
+
+            history = history.append(pd.DataFrame([current_history], columns=col_names))
+
+
+
 
             if step % output_step != 0:
                 continue
@@ -145,7 +156,7 @@ def train_WGAN(D, G, dataset_true,
             x_hat = G.x.detach().cpu().squeeze().numpy()
             #vmin, vmax = im.min(), im.max()
             #vmin, vmax = 0, 1
-            
+
             fig, ax = plt.subplots()
             ax.set_title('reconstruction')
             im_h = ax.imshow(x_hat)
@@ -181,9 +192,8 @@ def train_WGAN(D, G, dataset_true,
             fig.savefig(os.path.join(out_folder, f'batch_{step}.png'))
             plt.close(fig)
 
- 
-    sys.stdout.close
-    return G, D 
+
+    return G, D, history
 
 
 
