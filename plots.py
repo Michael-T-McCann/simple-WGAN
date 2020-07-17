@@ -4,7 +4,6 @@ import pandas as pd
 import sys
 
 def PlotRes(path):
-    sys.stdout.close
 
     data = pd.read_csv(path + '/res.txt', sep="\t", header=None)  
     MSE_xGT = data[1]  
