@@ -63,13 +63,17 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
     # discriminator
     D = discriminator.ConvMax(x_GT.size)
 
-    logging.info(f"Num Steps: {ns}\n"
-                 f"Batch Size: {bs}\n"
-                 f"Learning Rate G: {lr_G}\n"
+    logging.info(
+                f"\n"
+                f"Num Steps: {ns}\n"
+                f"Batch Size: {bs}\n"
+                f"Learning Rate G: {lr_G}\n"
                 f"Learning Rate D: {lr_D}\n"
-                 f'Num Steps G: {ns_G}\n')  # todo: finish this
-#                 Num Steps D: ", ns_D,
-#                  "\nReg Weight: ", regW,"\nNoise Sigma: ",noiseSigma))
+                f"Num Steps G: {ns_G}\n" 
+                f"Num Steps D:  {ns_D}\n"
+                f"Reg Weight: {regW}\n"
+                f"Noise Sigma: {noiseSigma}\n"
+                )
 
 
 
@@ -94,7 +98,7 @@ def SweepThru(noiseSigma = 0.4,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
 #noise_sigmas = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
 #num_steps_dis = [1,2,3,4,5,6,7,8,9,10]
 #num_steps_gen = [1,2,3,4,5,6,7,8,9,10]
-batchSizes = [4,5]
+batchSizes = [4,5,6,7,8,9,10]
 
 t = time.strftime("%Y-%m-%d-%H-%M-%S")
 top_dir = "results/" + t + "Batch_Trials"
@@ -113,4 +117,4 @@ logging.getLogger().addHandler(logging.StreamHandler(sys.stdout)) # sending to s
 
 
 for inc in batchSizes:
-    SweepThru(bs = inc, path = (t+"Batch_Trials"), ns=2)
+    SweepThru(bs = inc, path = (t+"Batch_Trials"), ns=100)

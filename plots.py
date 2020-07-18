@@ -4,7 +4,8 @@ import pandas as pd
 import logging
 
 def PlotRes(data, path):
-    """ data - pd dataframe 'history' from train
+    """ 
+        data - pd dataframe 'history' from train
     """
 
     MSE_xGT = data.iloc[:, 1]  # MSE
@@ -21,7 +22,9 @@ def PlotRes(data, path):
 
     plt.plot(np.arange(len(MSE_xGT)),MSE_xGT, label = 'MSE: x-x_GT')
     plt.plot(np.arange(len(MSE_AVG)),MSE_AVG, label = 'MSE: Avgeraging')
+    plt.legend()
 
     image_path = path + '/ResultGraph.png'
-    logging.info("writing graph to " + image_path)
+    logging.info("\n writing graph to " + image_path)
     plt.savefig(image_path)
+    plt.close()

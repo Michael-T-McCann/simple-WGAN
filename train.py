@@ -61,7 +61,7 @@ def train_WGAN(D, G, dataset_true,
     history = pd.DataFrame(columns=col_names)
 
     count = 0
-    rolling_sum = 1
+    rolling_sum = 0
     average = 1
 
     for step in range(num_steps):
@@ -72,6 +72,10 @@ def train_WGAN(D, G, dataset_true,
 
             y_true = next(Y_true)
             y_fake = next(Y_fake)
+
+            #print("\n THE SHAPE OF y_true IS:" + str(y_true.shape))
+
+            rolling_sum += y_true.sum(dim=0)
 
             score_true = torch.mean(D(y_true))
             score_fake = torch.mean(D(y_fake))
@@ -119,20 +123,18 @@ def train_WGAN(D, G, dataset_true,
 
         # print loss, make plots
         with torch.no_grad():
+            #   y_true = D.x.detach()
             x_hat = G.x.detach()
-         #   y_true = D.x.detach()
-
-
             mse = (x_hat - x_gt).pow(2).mean()
 
-            rolling_sum += y_true
-            average = rolling_sum / (count * batch_size * num_steps_D)
-            count += 1
-
+            average = rolling_sum / (step * batch_size * num_steps_D)
+            count += 1 
+            
             AvgMSE = (average - x_gt).pow(2).mean()
 
             #  print("Avg: ", float(AvgMSE))
-            current_history = (step,
+            current_history = (
+                   step,
                    float(mse),
                    float(loss_G.item()),
                    float(score_true.item()),
@@ -192,6 +194,14 @@ def train_WGAN(D, G, dataset_true,
             fig.savefig(os.path.join(out_folder, f'batch_{step}.png'))
             plt.close(fig)
 
+            fig, ax = plt.subplots()
+            fig.tight_layout()
+            average.detach().cpu().squeeze().numpy()
+            ax.set_title('Average')
+            im_h = ax.imshow(average)
+            fig.colorbar(im_h, ax=ax)
+            fig.savefig(os.path.join(out_folder,f'AvgerageC.png'))
+            plt.close(fig)
 
     return G, D, history
 
