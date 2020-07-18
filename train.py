@@ -196,7 +196,7 @@ def train_WGAN(D, G, dataset_true,
 
             fig, ax = plt.subplots()
             fig.tight_layout()
-            average.detach().cpu().squeeze().numpy()
+            average = average.detach().cpu().squeeze().numpy()
             ax.set_title('Average')
             im_h = ax.imshow(average)
             fig.colorbar(im_h, ax=ax)
