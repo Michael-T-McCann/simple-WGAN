@@ -20,9 +20,7 @@ def train_WGAN(D, G, dataset_true,
     # could I refactor with a yield?
     plt.set_cmap('gray')
 
-
     # -----
-
     fig, ax = plt.subplots()
 
     ax.set_title('Ground Truth')
@@ -33,7 +31,6 @@ def train_WGAN(D, G, dataset_true,
     plt.close(fig)
 
     x_gt = torch.tensor(x_gt,device=device)
-
 
     D = D.to(device)
     G = G.to(device)
@@ -74,8 +71,8 @@ def train_WGAN(D, G, dataset_true,
             y_fake = next(Y_fake)
 
             #print("\n THE SHAPE OF y_true IS:" + str(y_true.shape))
-
             rolling_sum += y_true.sum(dim=0)
+           # print(str(rolling_sum.shape) + " 999999999999")
 
             score_true = torch.mean(D(y_true))
             score_fake = torch.mean(D(y_fake))
@@ -120,15 +117,17 @@ def train_WGAN(D, G, dataset_true,
             loss_G.backward()
             optim_G.step()
 
-
         # print loss, make plots
         with torch.no_grad():
             #   y_true = D.x.detach()
             x_hat = G.x.detach()
             mse = (x_hat - x_gt).pow(2).mean()
 
-            average = rolling_sum / (step * batch_size * num_steps_D)
-            count += 1 
+            average = rolling_sum / ((step + 1) * batch_size * num_steps_D) 
+
+            #average = rolling_sum #/ (step * num_steps_D)
+
+            count += 1
             
             AvgMSE = (average - x_gt).pow(2).mean()
 
@@ -149,9 +148,6 @@ def train_WGAN(D, G, dataset_true,
 
             history = history.append(pd.DataFrame([current_history], columns=col_names))
 
-
-
-
             if step % output_step != 0:
                 continue
 
@@ -162,7 +158,7 @@ def train_WGAN(D, G, dataset_true,
             fig, ax = plt.subplots()
             ax.set_title('reconstruction')
             im_h = ax.imshow(x_hat)
-            fig.colorbar(im_h, ax=ax)
+            fig.colorbar(im_h, ax=ax) 
 
             #fig, ax = plt.subplots(1, 3, figsize=(8,2))
             #im_h = ax[0].imshow(im, vmin=vmin, vmax=vmax)
@@ -192,7 +188,17 @@ def train_WGAN(D, G, dataset_true,
             fig.tight_layout()
 
             fig.savefig(os.path.join(out_folder, f'batch_{step}.png'))
-            plt.close(fig)
+            plt.close(fig) 
+            
+            dafake = y_true[0]
+            fig, ax = plt.subplots()
+            fig.tight_layout()
+            dafake = dafake.detach().cpu().squeeze().numpy()
+            ax.set_title('THIS IS DA NOISE')
+            im_h = ax.imshow(dafake)
+            fig.colorbar(im_h, ax=ax)
+            fig.savefig(os.path.join(out_folder,f'FAAAKE.png'))
+            plt.close(fig)           
 
             fig, ax = plt.subplots()
             fig.tight_layout()
@@ -215,5 +221,8 @@ def train_WGAN(D, G, dataset_true,
     #fig.colorbar(im_h, ax=ax)
     #fig.savefig(os.path.join(out_folder,f'AvgerageC.png'))
     #plt.close(fig)
-# scp -r /home/mhuwio/GanTests/simple-WGAN/results huwiomuh@scully.egr.msu.edu:~/ResultStation
+# scp -r /home/mhuwio/GanTests/simple-WGAN/results huwiomuh@scully.egr.msu.edu:~/ResultStation/
 #scp -o ProxyCommand="ssh huwiomuh@scully.egr.msu.edu nc mhuwio@35.12.218.162:22"  mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results /Users/moehuwio/MLtests/simple-WGAN/results
+
+#scp -r mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results/2020-07-17-22-28-25Batch_Trials/ ~/ResultStation/ 
+  

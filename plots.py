@@ -17,8 +17,6 @@ def PlotRes(data, path):
     MSE_AVG = MSE_AVG[1:]
     MSE_AVG = MSE_AVG.to_numpy()
     MSE_AVG = MSE_AVG.astype(float)
-    MSE_AVG[0] = 0.0
-
 
     plt.plot(np.arange(len(MSE_xGT)),MSE_xGT, label = 'MSE: x-x_GT')
     plt.plot(np.arange(len(MSE_AVG)),MSE_AVG, label = 'MSE: Avgeraging')
