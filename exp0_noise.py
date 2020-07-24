@@ -88,8 +88,6 @@ def SweepThru(noiseSigma = 0.9,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
 
     history.to_csv(outdir + '/history.csv')
 
-
- #print(D)
     PlotRes(history, outdir)
 
 #noise_sigmas = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
@@ -98,7 +96,7 @@ def SweepThru(noiseSigma = 0.9,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
 num_steps_gen = [1,2,3,4,5,6,7,8,9,10]
 
 t = time.strftime("%Y-%m-%d-%H-%M-%S")
-top_dir = "results/" + t + "Batch_Trials"
+top_dir = "results/" + t + "G_StepTrials"
 os.makedirs(top_dir)
 
 # setup logging
@@ -114,4 +112,4 @@ logging.getLogger().addHandler(logging.StreamHandler(sys.stdout)) # sending to s
 
 
 for inc in num_steps_gen:
-    SweepThru(bs = inc, path = (t+"G_StepTrials"), ns=100)
+    SweepThru(ns_G = inc, path = (t+"G_StepTrials"), ns=100)
