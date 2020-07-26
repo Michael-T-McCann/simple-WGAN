@@ -71,7 +71,7 @@ def train_WGAN(D, G, dataset_true,
             y_fake = next(Y_fake)
 
             #print("\n THE SHAPE OF y_true IS:" + str(y_true.shape))
-            rolling_sum += y_true.sum(dim=0)
+            rolling_sum += y_true.sum(dim=0) 
            # print(str(rolling_sum.shape) + " 999999999999")
 
             score_true = torch.mean(D(y_true))
@@ -125,7 +125,7 @@ def train_WGAN(D, G, dataset_true,
 
             average = rolling_sum / ((step + 1) * batch_size * num_steps_D) 
 
-            #average = rolling_sum #/ (step * num_steps_D)
+            #average = rolling_sum #/ (step * num_steps_D)  
 
             count += 1
             
@@ -224,5 +224,5 @@ def train_WGAN(D, G, dataset_true,
 # scp -r /home/mhuwio/GanTests/simple-WGAN/results huwiomuh@scully.egr.msu.edu:~/ResultStation/
 #scp -o ProxyCommand="ssh huwiomuh@scully.egr.msu.edu nc mhuwio@35.12.218.162:22"  mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results /Users/moehuwio/MLtests/simple-WGAN/results
 
-#scp -r mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results/2020-07-21-22-25-46G_StepTrials ~/ResultStation/
-  
+#scp -r mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results/2020-07-24-10-27-31G_StepTrials ~/ResultStation/
+   

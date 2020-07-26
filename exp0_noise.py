@@ -14,7 +14,7 @@ if torch.cuda.is_available():
 else:
     device = torch.device("cpu")
 
-def SweepThru(noiseSigma = 0.5,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G = 3, ns_D = 3, regW = 1e1, path = "dir"):
+def SweepThru(noiseSigma = 0.5,ns = 100, bs = 10, lr_G = 1e-2, lr_D = 1e-2, ns_G = 1, ns_D = 3, regW = 1e1, path = "dir"):
 
 
     t = time.strftime("%Y%m%d-%H%M%S")
@@ -91,12 +91,12 @@ def SweepThru(noiseSigma = 0.5,ns = 100, bs = 3, lr_G = 1e-2, lr_D = 1e-2, ns_G 
     PlotRes(history, outdir)
 
 #noise_sigmas = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
-#num_steps_dis = [1,2,3,4,5,6,7,8,9,10]
+num_steps_dis = [1,2,3,4,5,6,7,8,9,10]
 #batchSizes = [4]
-num_steps_gen = [1,2,3,4,5,6,7,8,9,10]
+#num_steps_gen = [1,2,3,4,5,6,7,8,9,10]
 
 t = time.strftime("%Y-%m-%d-%H-%M-%S")
-top_dir = "results/" + t + "G_StepTrials"
+top_dir = "results/" + t + "D_StepTrials"
 os.makedirs(top_dir)
 
 # setup logging
@@ -111,5 +111,5 @@ logging.getLogger().addHandler(logging.StreamHandler(sys.stdout)) # sending to s
 
 
 
-for inc in num_steps_gen:
-    SweepThru(ns_G = inc, path = (t+"G_StepTrials"), ns=100)
+for inc in num_steps_dis:
+    SweepThru(ns_D = inc, path = (t+"D_StepTrials"), ns=100)
