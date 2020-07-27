@@ -14,13 +14,13 @@ if torch.cuda.is_available():
 else:
     device = torch.device("cpu")
 
-def SweepThru(noiseSigma = 0.5,ns = 100, bs = 10, lr_G = 1e-2, lr_D = 1e-2, ns_G = 1, ns_D = 3, regW = 1e1, path = "dir"):
+def SweepThru(noiseSigma = 0.5,ns = 150, bs = 10, lr_G = 1e-2, lr_D = 1e-2, ns_G = 2, ns_D = 3, regW = 5, path = "dir"):
 
 
     t = time.strftime("%Y%m%d-%H%M%S")
     outdir = os.path.join(
         'results', path,
-        'noise_' + t)
+        'noise_' + t) 
 
     os.makedirs(outdir)
 
@@ -112,4 +112,4 @@ logging.getLogger().addHandler(logging.StreamHandler(sys.stdout)) # sending to s
 
 
 for inc in num_steps_dis:
-    SweepThru(ns_D = inc, path = (t+"D_StepTrials"), ns=100)
+    SweepThru(ns_D = inc, path = (t+"_D_StepTrials_ST"), ns=100)
