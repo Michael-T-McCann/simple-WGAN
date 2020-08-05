@@ -6,7 +6,7 @@ from cv2 import cv2
 import sys
 import logging
 
-from plots import PlotRes
+from plots import PlotRes, PlotAll
 import dataset, generator, discriminator, train
 
 if torch.cuda.is_available():
@@ -87,13 +87,9 @@ def SweepThru(noiseSigma = 0.5,ns = 150, bs = 32, lr_G = 1e-2, lr_D = 1e-2, ns_G
     print(history)
 
     history.to_csv(outdir + '/history.csv')
+    PlotRes(history, outdir) 
 
-    PlotRes(history, outdir)
-
-#noise_sigmas = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
-num_steps_dis = [1,2,3,4,5,6,7,8,9,10]
-#batchSizes = [4]
-#num_steps_gen = [1,2,3,4,5,6,7,8,9,10]
+    return history.iloc[:, 1]
 
 t = time.strftime("%Y-%m-%d-%H-%M-%S")
 top_dir = "results/" + t + "_D_StepTrials_LR"
@@ -110,7 +106,15 @@ logging.basicConfig(  # sending to file
 logging.getLogger().addHandler(logging.StreamHandler(sys.stdout)) # sending to stdout
 
 
- 
+
+#noise_sigmas = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
+#batchSizes = [4]
+#num_steps_gen = [1,2,3,4,5,6,7,8,9,10]
+
+num_steps_dis = [1,2,3,4,5,6,7,8,9,10]
+mse_res_dict = {}
+
 for inc in num_steps_dis:
-    SweepThru(ns_D = inc, path = (t+"_D_StepTrials_LR"), ns=100)
- 
+    mse_res_dict["D_Steps=" + str(inc)] = SweepThru(ns_D = inc, path = (t+"_D_StepTrials_LR"), ns=100)
+
+PlotAll(mse_res_dict, top_dir)
