@@ -38,7 +38,7 @@ def train_WGAN(D, G, dataset_true,
     dataset_true.to(device)
 
     # setup
-    Y_true = iter(torch.utils.data.DataLoader(
+    Y_true = iter(torch.utils.data.DataLoader( 
         dataset_true, batch_size=batch_size))
 
     Y_fake = iter(torch.utils.data.DataLoader(
@@ -46,8 +46,9 @@ def train_WGAN(D, G, dataset_true,
 
     loss_fcn = torch.nn.MSELoss(reduction='mean')
     optim_G = torch.optim.Adam(G.parameters(), lr=learning_rate_G)
-    optim_D = torch.optim.Adam(D.parameters(), lr=learning_rate_D)
+    optim_D = torch.optim.Adam(D.parameters(), lr=learning_rate_D) 
 
+    #optim_G.param_groups[0]['lr'] *= .1 
 
     # main loop
     col_names = (
@@ -121,11 +122,13 @@ def train_WGAN(D, G, dataset_true,
         with torch.no_grad():
             #   y_true = D.x.detach()
             x_hat = G.x.detach()
-            mse = (x_hat - x_gt).pow(2).mean()
+            mse = (x_hat - x_gt).pow(2).mean() 
 
             average = rolling_sum / ((step + 1) * batch_size * num_steps_D) 
 
             #average = rolling_sum #/ (step * num_steps_D)  
+            if(step == 50):
+                optim_G.param_groups[0]['lr'] *= .1
 
             count += 1
             
@@ -224,5 +227,4 @@ def train_WGAN(D, G, dataset_true,
 # scp -r /home/mhuwio/GanTests/simple-WGAN/results huwiomuh@scully.egr.msu.edu:~/ResultStation/
 #scp -o ProxyCommand="ssh huwiomuh@scully.egr.msu.edu nc mhuwio@35.12.218.162:22"  mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results /Users/moehuwio/MLtests/simple-WGAN/results
 
-#scp -r mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results/2020-07-24-10-27-31G_StepTrials ~/ResultStation/
-   
+#scp -r mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results/2020-07-29-10-36-18_D_StepTrials_BS/log.txt/ ~/ResultStation/

@@ -22,7 +22,7 @@ def SweepThru(noiseSigma = 0.5,ns = 150, bs = 32, lr_G = 1e-2, lr_D = 1e-2, ns_G
         'results', path,
         'noise_' + t)
 
-    os.makedirs(outdir)
+    os.makedirs(outdir) 
 
 
     # true data distribution
@@ -102,7 +102,7 @@ os.makedirs(top_dir)
 # setup logging
 logging.getLogger('matplotlib').setLevel(logging.WARNING)
 log_filename = os.path.join(top_dir, 'log.txt')
-logging.basicConfig(  # sending to file
+logging.basicConfig(  # sending to file 
     filename=log_filename,
     level=logging.DEBUG,
     format='%(message)s',
