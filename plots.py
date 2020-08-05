@@ -26,3 +26,16 @@ def PlotRes(data, path):
     logging.info("\n writing graph to " + image_path)
     plt.savefig(image_path)
     plt.close()
+
+def PlotAll(Dict, path): 
+    for key in Dict: 
+        plt.plot(np.arange(len(Dict[key])), Dict[key], label = key) 
+    
+    plt.legend()
+    image_path = path + '/AllGraphs.png'
+    logging.info("\n writing graph to " + image_path)
+    plt.savefig(image_path)
+    plt.close() 
+
+    df = pd.DataFrame.from_dict(Dict, orient='index').transpose() 
+    df.to_csv(path + '/AllMSE.csv')
