@@ -96,7 +96,7 @@ num_steps_dis = [1,2,3,4,5,6,7,8,9,10]
 #num_steps_gen = [1,2,3,4,5,6,7,8,9,10]
 
 t = time.strftime("%Y-%m-%d-%H-%M-%S")
-top_dir = "results/" + t + "_D_StepTrials_BS"
+top_dir = "results/" + t + "_D_StepTrials_LR"
 os.makedirs(top_dir)
 
 # setup logging
@@ -112,5 +112,5 @@ logging.getLogger().addHandler(logging.StreamHandler(sys.stdout)) # sending to s
 
  
 for inc in num_steps_dis:
-    SweepThru(ns_D = inc, path = (t+"_D_StepTrials_BS"), ns=100)
+    SweepThru(ns_D = inc, path = (t+"_D_StepTrials_LR"), ns=100)
  
