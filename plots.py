@@ -37,5 +37,5 @@ def PlotAll(Dict, path):
     plt.savefig(image_path)
     plt.close() 
 
-    df = pd.DataFrame.from_dict(Dict, orient='index').transpose() 
+    df = pd.DataFrame.from_dict(Dict)
     df.to_csv(path + '/AllMSE.csv')
