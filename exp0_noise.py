@@ -92,7 +92,7 @@ def SweepThru(noiseSigma = 0.5,ns = 150, bs = 32, lr_G = 1e-2, lr_D = 1e-2, ns_G
     return history.iloc[:, 1]
 
 t = time.strftime("%Y-%m-%d-%H-%M-%S")
-top_dir = "results/" + t + "_D_StepTrials_LR"
+top_dir = "results/" + t + "_D_StepTrials_LR_R_Reg"
 os.makedirs(top_dir)
 
 # setup logging
@@ -115,6 +115,6 @@ num_steps_dis = [1,2,3,4,5,6,7,8,9,10]
 mse_res_dict = {}
 
 for inc in num_steps_dis:
-    mse_res_dict["D_Steps=" + str(inc)] = SweepThru(ns_D = inc, path = (t+"_D_StepTrials_LR"), ns=100)
+    mse_res_dict["D_Steps=" + str(inc)] = SweepThru(ns_D = inc, path = (t+"_D_StepTrials_LR_R_Reg"), ns=100)
 
 PlotAll(mse_res_dict, top_dir)

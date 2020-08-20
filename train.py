@@ -88,20 +88,30 @@ def train_WGAN(D, G, dataset_true,
             with torch.no_grad():
                  alpha = torch.rand(batch_size, device=device)
                  alpha = alpha.unsqueeze(1).unsqueeze(2)
-                 x_between = alpha*y_true + (1-alpha)*y_fake
+                 #x_between = alpha*y_true + (1-alpha)*y_fake # just y_true 
+                 x_between = y_true
+
 
             # using backward leaks memory (I think),
             # so we use grad instead
             # see https://github.com/pytorch/pytorch/issues/4661
             x_between.requires_grad_(True)
-            Dx = D(x_between)
-            grad_x = torch.autograd.grad(
-                Dx, x_between, torch.ones_like(Dx), create_graph=True)[0]
+
+            Dx = D(x_between) 
+
+            grad_x = torch.autograd.grad(Dx, x_between, torch.ones_like(Dx), create_graph=True)[0]  
+
+            reg_D = (reg_weight / 2.0) * torch.mean(
+            (torch.sqrt(torch.sum(grad_x**2, axis=(1,2))))**2
+            ) 
+
+            """   
             reg_D = reg_weight * torch.mean(
                 (
                     torch.sqrt(torch.sum(grad_x**2, axis=(1,2)))
                     -1)**2
             )
+            """
             optim_D.zero_grad()
             reg_D.backward()
             optim_D.step()
@@ -117,7 +127,7 @@ def train_WGAN(D, G, dataset_true,
             optim_G.zero_grad()
             loss_G.backward()
             optim_G.step()
-
+ 
         # print loss, make plots
         with torch.no_grad():
             #   y_true = D.x.detach()
