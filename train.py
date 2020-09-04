@@ -86,8 +86,8 @@ def train_WGAN(D, G, dataset_true,
 
             # regularization
             with torch.no_grad():
-                 alpha = torch.rand(batch_size, device=device)
-                 alpha = alpha.unsqueeze(1).unsqueeze(2)
+          #       alpha = torch.rand(batch_size, device=device)
+               #  alpha = alpha.unsqueeze(1).unsqueeze(2)
                  #x_between = alpha*y_true + (1-alpha)*y_fake # just y_true 
                  x_between = y_true
 
@@ -103,14 +103,14 @@ def train_WGAN(D, G, dataset_true,
 
             reg_D = (reg_weight / 2.0) * torch.mean(
             (torch.sqrt(torch.sum(grad_x**2, axis=(1,2))))**2
-            ) 
+            )
 
             """   
             reg_D = reg_weight * torch.mean(
                 (
                     torch.sqrt(torch.sum(grad_x**2, axis=(1,2)))
-                    -1)**2
-            )
+                    -1)**2 
+            ) 
             """
             optim_D.zero_grad()
             reg_D.backward()
@@ -237,4 +237,8 @@ def train_WGAN(D, G, dataset_true,
 # scp -r /home/mhuwio/GanTests/simple-WGAN/results huwiomuh@scully.egr.msu.edu:~/ResultStation/
 #scp -o ProxyCommand="ssh huwiomuh@scully.egr.msu.edu nc mhuwio@35.12.218.162:22"  mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results /Users/moehuwio/MLtests/simple-WGAN/results
 
-#scp -r mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results/2020-08-05-11-17-40_D_StepTrials_LR/noise_20200805-113445/ ~/ResultStation/
+#scp -r mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results/2020-09-03-14-49-43_D_StepTrials_LR_R_Reg/AllMSE.csv ~/ResultStation/
+
+
+
+#scp huwiomuh@arctic.cse.msu.edu:~/ProjectsCSE-320/Project1/proj01.tutorial ~/Desktop/ 
