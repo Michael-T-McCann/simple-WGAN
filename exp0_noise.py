@@ -128,5 +128,7 @@ for i in range(2):
     
     data_frame_list.append(pd.DataFrame.from_dict(mse_res_dict))
 np.asarray(data_frame_list)
+
+print(data_frame_list)
 np.save(very_top + '/' + 'FULL-DATA.npy' , data_frame_list)
 

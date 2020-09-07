@@ -242,7 +242,7 @@ def train_WGAN(D, G, dataset_true,
 # scp -r /home/mhuwio/GanTests/simple-WGAN/results huwiomuh@scully.egr.msu.edu:~/ResultStation/
 #scp -o ProxyCommand="ssh huwiomuh@scully.egr.msu.edu nc mhuwio@35.12.218.162:22"  mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results /Users/moehuwio/MLtests/simple-WGAN/results
 
-#scp -r mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results/2020-09-03-14-49-43_D_StepTrials_LR_R_Reg/AllMSE.csv ~/ResultStation/
+#scp -r mhuwio@sai.dhcp.egr.msu.edu:~/GanTests/simple-WGAN/results/MULTI-SWEEP/FULL-DATA.npy ~/ResultStation/
 
 
 
