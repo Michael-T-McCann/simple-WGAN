@@ -20,7 +20,7 @@ def SweepThru(noiseSigma = 0.5,ns = 150, bs = 32, lr_G = 1e-2, lr_D = 1e-2, ns_G
 
     t = time.strftime("%Y%m%d-%H%M%S")
     outdir = os.path.join(
-        'results', path,
+        'results/MULTI-SWEEP', path,
         'noise_' + t)
 
     os.makedirs(outdir) 
@@ -127,6 +127,6 @@ for i in range(50):
         mse_res_dict["D_Steps=" + str(inc)] = SweepThru(ns_D = inc, path = (t+"Disc-trials-RGAN"), ns=100)
     
     data_frame_list.append(pd.DataFrame.from_dict(mse_res_dict).values)
- 
+   
 np.save(very_top + '/' + 'FULL-DATA.npy' , data_frame_list)
 

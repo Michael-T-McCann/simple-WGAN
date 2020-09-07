@@ -166,80 +166,8 @@ def train_WGAN(D, G, dataset_true,
 
             if step % output_step != 0:
                 continue
-
-            x_hat = G.x.detach().cpu().squeeze().numpy()
-            
-            """
-            #vmin, vmax = im.min(), im.max()
-            #vmin, vmax = 0, 1
-        
-            fig, ax = plt.subplots()
-            ax.set_title('reconstruction')
-            im_h = ax.imshow(x_hat)
-            fig.colorbar(im_h, ax=ax) 
-
-            #fig, ax = plt.subplots(1, 3, figsize=(8,2))
-            #im_h = ax[0].imshow(im, vmin=vmin, vmax=vmax)
-            #ax[0].set_title('ground truth')
-            #fig.colorbar(im_h, ax=ax[0])
-
-            #im_h = ax[1].imshow(x_hat, vmin=vmin, vmax=vmax)
-            #ax[1].set_title('reconstruction')
-            #fig.colorbar(im_h, ax=ax[1])
-
-            #im_h = ax[2].imshow(abs(im-x_hat))
-            #ax[2].set_title('absolute error')
-            #fig.colorbar(im_h, ax=ax[2])
-
-            fig.tight_layout()
-            fig.savefig(os.path.join(out_folder,f'im_{step}.png'))
-            plt.close(fig)
-
-            num_plots = min(batch_size, 5)
-            fig, ax = plt.subplots(2, num_plots, squeeze=False)
-            for ind in range(num_plots):
-                ax[0,ind].imshow(y_fake[ind].detach().cpu())
-                ax[1,ind].imshow(y_true[ind].detach().cpu())
-
-            ax[0,0].set_ylabel('fake', rotation=0)
-            ax[1,0].set_ylabel('true', rotation=0)
-            fig.tight_layout()
-
-            fig.savefig(os.path.join(out_folder, f'batch_{step}.png'))
-            plt.close(fig) 
-            
-            dafake = y_true[0]
-            fig, ax = plt.subplots()
-            fig.tight_layout()
-            dafake = dafake.detach().cpu().squeeze().numpy()
-            ax.set_title('THIS IS DA NOISE')
-            im_h = ax.imshow(dafake)
-            fig.colorbar(im_h, ax=ax)
-            fig.savefig(os.path.join(out_folder,f'FAAAKE.png'))
-            plt.close(fig)           
-
-            fig, ax = plt.subplots()
-            fig.tight_layout()
-            average = average.detach().cpu().squeeze().numpy()
-            ax.set_title('Average')
-            im_h = ax.imshow(average)
-            fig.colorbar(im_h, ax=ax)
-            fig.savefig(os.path.join(out_folder,f'AvgerageC.png'))
-            plt.close(fig)
-    """ 
     return G, D, history
 
-
-
-    #fig, ax = plt.subplots()
-    #fig.tight_layout()
-    #average.detach().cpu().squeeze().numpy()
-    #ax.set_title('Average')
-    #im_h = ax.imshow(average)
-    #fig.colorbar(im_h, ax=ax)
-    #fig.savefig(os.path.join(out_folder,f'AvgerageC.png'))
-    #plt.close(fig)
-# scp -r /home/mhuwio/GanTests/simple-WGAN/results huwiomuh@scully.egr.msu.edu:~/ResultStation/
 #scp -o ProxyCommand="ssh huwiomuh@scully.egr.msu.edu nc mhuwio@35.12.218.162:22"  mhuwio@35.12.218.162:~/GanTests/simple-WGAN/results /Users/moehuwio/MLtests/simple-WGAN/results
 
 #scp -r mhuwio@sai.dhcp.egr.msu.edu:~/GanTests/simple-WGAN/results/MULTI-SWEEP/FULL-DATA.npy ~/ResultStation/

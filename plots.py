@@ -6,7 +6,7 @@ import logging
 def PlotRes(data, path):
     """ 
         data - pd dataframe 'history' from train
-    """
+    """ 
 
     MSE_xGT = data.iloc[:, 1]  # MSE
     MSE_xGT = MSE_xGT[1:]
