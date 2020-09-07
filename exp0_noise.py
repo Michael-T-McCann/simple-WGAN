@@ -97,7 +97,7 @@ data_frame_list = []
 very_top = "results/MULTI-SWEEP" 
 os.makedirs(very_top)
 
-for i in range(2):
+for i in range(1000):
 
     t = time.strftime("%Y-%m-%d-%H-%M-%S")
     top_dir = very_top + "/" + t + "Disc-trials-RGAN"
@@ -120,15 +120,13 @@ for i in range(2):
     #batchSizes = [4]
     #num_steps_gen = [1,2,3,4,5,6,7,8,9,10]
 
-    num_steps_dis = [1,2,3] 
+    num_steps_dis = [1,2,3,4,5,6,7,8,9,10] 
     mse_res_dict = {}
 
     for inc in num_steps_dis:
-        mse_res_dict["D_Steps=" + str(inc)] = SweepThru(ns_D = inc, path = (t+"Disc-trials-RGAN"), ns=2)
+        mse_res_dict["D_Steps=" + str(inc)] = SweepThru(ns_D = inc, path = (t+"Disc-trials-RGAN"), ns=100)
     
-    data_frame_list.append(pd.DataFrame.from_dict(mse_res_dict))
-np.asarray(data_frame_list)
-
-print(data_frame_list)
+    data_frame_list.append(pd.DataFrame.from_dict(mse_res_dict).values)
+ 
 np.save(very_top + '/' + 'FULL-DATA.npy' , data_frame_list)
 
