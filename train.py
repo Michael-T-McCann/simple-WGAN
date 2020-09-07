@@ -18,6 +18,8 @@ def train_WGAN(D, G, dataset_true,
 
     # todo: this shouldn't go here, nor should all the plotting at the end
     # could I refactor with a yield?
+    
+    """
     plt.set_cmap('gray')
 
     # -----
@@ -29,7 +31,8 @@ def train_WGAN(D, G, dataset_true,
     fig.tight_layout()
     fig.savefig(os.path.join(out_folder,f'GroundTruth.png'))
     plt.close(fig)
-
+    """
+    
     x_gt = torch.tensor(x_gt,device=device)
 
     D = D.to(device)
@@ -165,9 +168,11 @@ def train_WGAN(D, G, dataset_true,
                 continue
 
             x_hat = G.x.detach().cpu().squeeze().numpy()
+            
+            """
             #vmin, vmax = im.min(), im.max()
             #vmin, vmax = 0, 1
-
+        
             fig, ax = plt.subplots()
             ax.set_title('reconstruction')
             im_h = ax.imshow(x_hat)
@@ -221,7 +226,7 @@ def train_WGAN(D, G, dataset_true,
             fig.colorbar(im_h, ax=ax)
             fig.savefig(os.path.join(out_folder,f'AvgerageC.png'))
             plt.close(fig)
-
+    """ 
     return G, D, history
 
 

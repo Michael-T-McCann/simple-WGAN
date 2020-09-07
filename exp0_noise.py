@@ -5,6 +5,7 @@ import numpy as np
 from cv2 import cv2
 import sys
 import logging
+import pandas as pd
 
 from plots import PlotRes, PlotAll
 import dataset, generator, discriminator, train
@@ -14,7 +15,7 @@ if torch.cuda.is_available():
 else:
     device = torch.device("cpu")
 
-def SweepThru(noiseSigma = 0.5,ns = 150, bs = 32, lr_G = 1e-2, lr_D = 1e-2, ns_G = 2, ns_D = 3, regW = 100, path = "dir"):
+def SweepThru(noiseSigma = 0.5,ns = 150, bs = 32, lr_G = 1e-2, lr_D = 1e-2, ns_G = 2, ns_D = 3, regW = 10, path = "dir"):
 
 
     t = time.strftime("%Y%m%d-%H%M%S")
@@ -87,34 +88,45 @@ def SweepThru(noiseSigma = 0.5,ns = 150, bs = 32, lr_G = 1e-2, lr_D = 1e-2, ns_G
     print(history)
 
     history.to_csv(outdir + '/history.csv')
-    PlotRes(history, outdir) 
-
+    PlotRes(history, outdir)  
+ 
     return history.iloc[:, 1]
 
-t = time.strftime("%Y-%m-%d-%H-%M-%S")
-top_dir = "results/" + t + "RegW_limits"
-os.makedirs(top_dir)
 
-# setup logging
-logging.getLogger('matplotlib').setLevel(logging.WARNING)
-log_filename = os.path.join(top_dir, 'log.txt')
-logging.basicConfig(  # sending to file 
-    filename=log_filename,
-    level=logging.DEBUG,
-    format='%(message)s',
-)
-logging.getLogger().addHandler(logging.StreamHandler(sys.stdout)) # sending to stdout
+data_frame_list = np.array()
+very_top = "results/MULTI-SWEEP" 
+os.makedirs(very_top)
+
+for i in range(2):
+
+    t = time.strftime("%Y-%m-%d-%H-%M-%S")
+    top_dir = very_top + "/" + t + "Disc-trials-RGAN"
+    #top_dir = "results/" + t + "RegW_limits"
+    os.makedirs(top_dir)    
+
+    # setup logging
+    logging.getLogger('matplotlib').setLevel(logging.WARNING)
+    log_filename = os.path.join(top_dir, 'log.txt')
+    logging.basicConfig(  # sending to file 
+        filename=log_filename,
+        level=logging.DEBUG,
+        format='%(message)s',
+    )
+    logging.getLogger().addHandler(logging.StreamHandler(sys.stdout)) # sending to stdout
 
 
 
-#noise_sigmas = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
-#batchSizes = [4]
-#num_steps_gen = [1,2,3,4,5,6,7,8,9,10]
+    #noise_sigmas = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
+    #batchSizes = [4]
+    #num_steps_gen = [1,2,3,4,5,6,7,8,9,10]
 
-num_steps_dis = [8] 
-mse_res_dict = {}
+    num_steps_dis = [1,2,3] 
+    mse_res_dict = {}
 
-for inc in num_steps_dis:
-    mse_res_dict["D_Steps=" + str(inc)] = SweepThru(ns_D = inc, path = (t+"RegW_limits"), ns=100)
+    for inc in num_steps_dis:
+        mse_res_dict["D_Steps=" + str(inc)] = SweepThru(ns_D = inc, path = (t+"Disc-trials-RGAN"), ns=2)
+    
+    data_frame_list.append(pd.DataFrame.from_dict(mse_res_dict))
 
-PlotAll(mse_res_dict, top_dir)
+np.save(very_top + '/' + 'FULL-DATA.npy' , data_frame_list)
+
