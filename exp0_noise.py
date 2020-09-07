@@ -97,7 +97,7 @@ data_frame_list = []
 very_top = "results/MULTI-SWEEP" 
 os.makedirs(very_top)
 
-for i in range(1000):
+for i in range(50):
 
     t = time.strftime("%Y-%m-%d-%H-%M-%S")
     top_dir = very_top + "/" + t + "Disc-trials-RGAN"
