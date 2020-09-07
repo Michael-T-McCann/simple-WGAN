@@ -93,7 +93,7 @@ def SweepThru(noiseSigma = 0.5,ns = 150, bs = 32, lr_G = 1e-2, lr_D = 1e-2, ns_G
     return history.iloc[:, 1]
 
 
-data_frame_list = np.array([])
+data_frame_list = []
 very_top = "results/MULTI-SWEEP" 
 os.makedirs(very_top)
 
@@ -127,6 +127,6 @@ for i in range(2):
         mse_res_dict["D_Steps=" + str(inc)] = SweepThru(ns_D = inc, path = (t+"Disc-trials-RGAN"), ns=2)
     
     data_frame_list.append(pd.DataFrame.from_dict(mse_res_dict))
-
+np.asarray(data_frame_list)
 np.save(very_top + '/' + 'FULL-DATA.npy' , data_frame_list)
 
