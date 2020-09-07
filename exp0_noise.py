@@ -93,7 +93,7 @@ def SweepThru(noiseSigma = 0.5,ns = 150, bs = 32, lr_G = 1e-2, lr_D = 1e-2, ns_G
     return history.iloc[:, 1]
 
 
-data_frame_list = np.array()
+data_frame_list = np.array([])
 very_top = "results/MULTI-SWEEP" 
 os.makedirs(very_top)
 
